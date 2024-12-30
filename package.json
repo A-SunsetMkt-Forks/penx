@@ -14,6 +14,8 @@
     "db:studio:prod": "drizzle-kit studio",
     "pages:build": "pnpm next-on-pages",
     "deploy": "pnpm pages:build && wrangler pages deploy",
+    "deploy:pure": "wrangler pages deploy",
+    "debug": "npx wrangler pages dev .vercel/output/static",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {

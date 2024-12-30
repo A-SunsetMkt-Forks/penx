@@ -1,13 +1,3 @@
-import { getIronSession } from 'iron-session'
-import { cookies } from 'next/headers'
-import { NextRequest } from 'next/server'
-import {
-  parseSiweMessage,
-  validateSiweMessage,
-  type SiweMessage,
-} from 'viem/siwe'
-import { NETWORK } from '@/lib/constants'
-import { getBasePublicClient } from '@/lib/getBasePublicClient'
 import {
   createUserByAddress,
   createUserByGoogleInfo,
@@ -20,6 +10,16 @@ import {
   SessionData,
 } from '@/lib/session'
 import { getAccountAddress } from '@/lib/utils'
+import { getIronSession } from 'iron-session'
+import { cookies } from 'next/headers'
+import { NextRequest } from 'next/server'
+import { createPublicClient, http } from 'viem'
+import { base } from 'viem/chains'
+import {
+  parseSiweMessage,
+  validateSiweMessage,
+  type SiweMessage,
+} from 'viem/siwe'
 
 export const runtime = 'edge'
 
@@ -69,7 +69,10 @@ export async function POST(request: NextRequest) {
         return Response.json(session)
       }
 
-      const publicClient = getBasePublicClient(NETWORK)
+      const publicClient = createPublicClient({
+        chain: base,
+        transport: http(),
+      })
 
       const valid = await publicClient.verifyMessage({
         address: siweMessage?.address,
